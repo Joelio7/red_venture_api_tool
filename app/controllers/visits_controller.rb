@@ -1,6 +1,4 @@
 class VisitsController < ApplicationController
-
-
   def create
     @visit = @current_user.visits.create!(visit_params)
     json_response(@visit, :created)
@@ -14,13 +12,19 @@ class VisitsController < ApplicationController
 
   def destroy
     @visit = @current_user.visits.find(params[:id])
-    @visit.destroy
-    head :no_content
+    if @visit.destroy
+      head :no_content
+      json_response("Visit successfully removed")
+    end
   end
 
   def states_index
+    @states=  []
     @user = User.find(params[:user_id])
-    @states = @user.visits.select('id','user_id','state_name').uniq(&:state_name)
+    states = @user.visits.select('id','user_id','state_name','city_name','state_id','city_id','created_at','updated_at').uniq(&:state_name)
+    states.each do |state|
+      @states << state.state_name
+    end
     json_response(@states)
   end
 

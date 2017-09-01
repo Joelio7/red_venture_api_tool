@@ -14,7 +14,7 @@ development:
   encoding: unicode
   database: redventureapi
   pool: 5
-  username:
+  username: 
   password: password1
 
 test:

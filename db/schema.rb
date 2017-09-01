@@ -10,34 +10,42 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170829231203) do
+ActiveRecord::Schema.define(version: 20170831184948) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "postgis"
 
   create_table "cities", force: :cascade do |t|
     t.string "name"
     t.string "status"
-    t.float "latitude"
-    t.float "longitude"
+    t.decimal "latitude"
+    t.decimal "longitude"
     t.bigint "state_id"
-    t.datetime "created_at", default: -> { "now()" }, null: false
-    t.datetime "updated_at", default: -> { "now()" }, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["state_id"], name: "index_cities_on_state_id"
+  end
+
+  create_table "spatial_ref_sys", primary_key: "srid", id: :integer, default: nil, force: :cascade do |t|
+    t.string "auth_name", limit: 256
+    t.integer "auth_srid"
+    t.string "srtext", limit: 2048
+    t.string "proj4text", limit: 2048
   end
 
   create_table "states", force: :cascade do |t|
     t.string "name"
     t.string "abbreviation"
-    t.datetime "created_at", default: -> { "now()" }, null: false
-    t.datetime "updated_at", default: -> { "now()" }, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
-    t.datetime "created_at", default: -> { "now()" }, null: false
-    t.datetime "updated_at", default: -> { "now()" }, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "email"
     t.string "password_digest"
   end
@@ -50,12 +58,13 @@ ActiveRecord::Schema.define(version: 20170829231203) do
     t.bigint "state_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id", "city_name", "state_name"], name: "index_visits_on_user_id_and_city_name_and_state_name", unique: true
+    t.index ["city_id"], name: "index_visits_on_city_id"
+    t.index ["state_id"], name: "index_visits_on_state_id"
+    t.index ["user_id", "city_id"], name: "index_visits_on_user_id_and_city_id", unique: true
     t.index ["user_id"], name: "index_visits_on_user_id"
   end
 
   add_foreign_key "visits", "cities"
-  add_foreign_key "visits", "cities", name: "visits_cities_id_fk"
   add_foreign_key "visits", "states"
   add_foreign_key "visits", "users"
 end

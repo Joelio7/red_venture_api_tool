@@ -1,10 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe 'Visits API', type: :request do
-  # add todos owner
   let(:user) { create(:user) }
   let(:visit_id) { visits.first.id }
-  # authorize request
   let(:headers) { valid_headers }
 
   describe 'GET /visits' do
