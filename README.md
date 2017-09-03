@@ -1,6 +1,7 @@
 # README
 
 This README will explain how to get the api running on your environment.
+"City data is provided by: http://simplemaps.com/data/us-cities 
 
 Steps to setup environment:
 * Git clone the repo on your local machine and "CD" into the project directory
